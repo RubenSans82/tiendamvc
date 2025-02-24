@@ -1,6 +1,7 @@
 <?php
 namespace Formacom\controllers;
 use Formacom\Core\Controller;
+use Formacom\models\User;
 
 
 class LoginController extends Controller{
@@ -9,11 +10,12 @@ class LoginController extends Controller{
         $this->view("login");
     }
     public function login(...$params){
-        if(isset($_POST["first_name"])){
-            var_dump($_POST);
+        if(isset($_POST["username"])){
+            $user=User::where("username",$_POST["username"]);
+            var_dump($user);
             exit();
         }else{
-            $this->view("new_actor"); 
+            header("Location: ".base_url()."login");
         }
        
     }
@@ -22,7 +24,7 @@ class LoginController extends Controller{
         $this->view("register");
     }
 
-    public function json(){
+/*     public function json(){
         $actores=Actor::where("first_name","like","P%")->get();
         $datos=[
             "mensaje"=>"Listado actores empiezan P",
@@ -32,7 +34,7 @@ class LoginController extends Controller{
         header('Content-Type: application/json');
         echo $json;
         exit();
-    }
+    } */
 
 }
 ?>
