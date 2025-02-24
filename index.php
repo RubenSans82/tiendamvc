@@ -8,7 +8,6 @@ $app=new App();
 // Agregamos el middleware de sesión, especificando que controladores no requieren sesión.
 // Por ejemplo, si tienes un LoginController y RegisterController, los exentas:
 $app->addMiddleware(new SessionMiddleware([
-    'Formacom\controllers\LoginController',
-    'Formacom\controllers\HomeController']));
+    'Formacom\controllers\LoginController']));
 $app->run();
 ?>

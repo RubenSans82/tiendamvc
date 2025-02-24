@@ -22,17 +22,26 @@
           <form action="<?= base_url() ?>login/login" method="post">
             <!-- Username input -->
             <div data-mdb-input-init class="form-outline mb-4">
+              <label class="form-label" for="form3Example3">Username</label>
               <input name="username" type="text" id="form3Example3" class="form-control form-control-lg"
                 placeholder="Enter a valid username" required />
-              <label class="form-label" for="form3Example3">Username</label>
             </div>
 
             <!-- Password input -->
             <div data-mdb-input-init class="form-outline mb-3">
+              <label class="form-label" for="form3Example4">Password</label>
               <input name="password" type="password" id="form3Example4" class="form-control form-control-lg"
                 placeholder="Enter password" required />
-              <label class="form-label" for="form3Example4">Password</label>
             </div>
+            <?php if (isset($data[0])) { ?>
+              <div class="alert alert-danger">
+                <?php
+                if (isset($data[0])) {
+                  echo $data[0];
+                }
+                ?>
+              </div>
+            <?php } ?>
 
             <div class="d-flex justify-content-between align-items-center">
               <!-- Checkbox -->
