@@ -73,6 +73,7 @@ class CustomerController extends Controller
                 exit;
             }
         }
+        
         header('Location: ' . base_url() . 'customer');
     }
 }
