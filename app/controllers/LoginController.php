@@ -3,7 +3,7 @@
 namespace Formacom\controllers;
 
 use Formacom\Core\Controller;
-use Formacom\models\User;
+use Formacom\Models\User;
 
 
 class LoginController extends Controller
@@ -23,10 +23,12 @@ class LoginController extends Controller
                 $_SESSION["username"] = $user->username;
                 header("Location: " . base_url() . "admin");
             } else {
-                $error = "Usuario o contraseña incorrectos";
+                $error = "User or pass incorrect";
                 $this->view("login", [$error]);
-                exit();
             }
+            exit();
+        } else {
+            header("Location: " . base_url() . "login");
         }
     }
 
@@ -34,5 +36,4 @@ class LoginController extends Controller
     {
         $this->view("register");
     }
-
 }

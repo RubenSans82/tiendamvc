@@ -1,3 +1,33 @@
-body{
-    background-color: yellow;
+body {
+    background-color: #919191;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.container2 {
+    margin: 0 20px;
+    display: grid;
+    
+
+
+}
+
+.formEdit {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-gap: 10px;
+    margin: 0 20px;;
+    
+
+}
+
+#btnEdit {
+    margin: 0 35px;
+
+
 }
