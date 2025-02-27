@@ -14,14 +14,14 @@
 <body>
     <nav class="navbar bg-dark border-bottom border-body" data-bs-theme="dark">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">Editar Datos Cliente</a>
+            <a class="navbar-brand" href="#">Editar Datos de <?= $data->name ?></a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarText">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Home</a>
+                        <a class="nav-link active" aria-current="page" href="<?=base_url()?>admin/index">Inicio</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Features</a>
@@ -38,50 +38,62 @@
     </nav>
     </br>
     <div class="container2">
-        <div class="mb-3">
-            <label for="name" class="form-label"><?= $data->name ?></label>
-        </div>
-        <form class="formEdit" method="POST" action="<?= base_url() ?>customer/edit">
 
-            <?php foreach ($data->addresses as $address) { ?>
-                <div class="card mb-3">
+        <div class="formEdit">
+            <!-- Formulario para editar el nombre del cliente -->
+            <form class="card mb-3" method="POST" action="<?= base_url() ?>customer/edit/<?= $data->customer_id ?>">
+                <div class="card-body">
+                    <h5 class="card-title">Datos del Cliente</h5>
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="name" name="name" value="<?= $data->name ?>">
+                    </div>
+                    <input type="hidden" name="form_type" value="customer">
+                    <button type="submit" class="btn btn-primary">Actualizar Nombre</button>
+                </div>
+            </form>
+
+            <?php foreach ($data->addresses as $clave=>$address) { ?>
+                <form class="card mb-3" method="POST" action="<?= base_url() ?>customer/edit/<?= $data->customer_id ?>">
                     <div class="card-body">
-                        <h5 class="card-title">Dirección</h5>
+                        <h5 class="card-title">Dirección <?=$clave+1?></h5>
                         <div class="mb-3">
                             <label for="street" class="form-label">Calle</label>
                             <input type="text" class="form-control" id="street<?= $address->address_id ?>" name="street" value="<?= $address->street ?>">
                         </div>
                         <div class="mb-3">
                             <label for="city" class="form-label">Ciudad</label>
-                            <input type="text" class="form-control" id="city" name="city" value="<?= $address->city ?>">
+                            <input type="text" class="form-control" id="city<?= $address->address_id ?>" name="city" value="<?= $address->city ?>">
                         </div>
                         <div class="mb-3">
                             <label for="zip_code" class="form-label">C.P.</label>
-                            <input type="text" class="form-control" id="zip_code" name="zip_code" value="<?= $address->zip_code ?>">
+                            <input type="text" class="form-control" id="zip_code<?= $address->address_id ?>" name="zip_code" value="<?= $address->zip_code ?>">
                         </div>
                         <div class="mb-3">
                             <label for="country" class="form-label">País</label>
-                            <input type="text" class="form-control" id="country" name="country" value="<?= $address->country ?>">
+                            <input type="text" class="form-control" id="country<?= $address->address_id ?>" name="country" value="<?= $address->country ?>">
                         </div>
+                        <input type="hidden" name="address_id" value="<?= $address->address_id ?>">
+                        <input type="hidden" name="form_type" value="address">
                         <button type="submit" class="btn btn-primary">Editar Direccion</button>
                     </div>
-                </div>
+                </form>
             <?php } ?>
-            <?php foreach ($data->phones as $phone) { ?>
-                <div class="card mb-3">
+            <?php foreach ($data->phones as $clave=>$phone) { ?>
+                <form class="card mb-3" method="POST" action="<?= base_url() ?>customer/edit/<?= $data->customer_id ?>">
                     <div class="card-body">
-                        <h5 class="card-title">Teléfono</h5>
+                        <h5 class="card-title">Teléfono <?=$clave+1?></h5>
                         <div class="mb-3">
                             <label for="number" class="form-label">Número</label>
-                            <input type="text" class="form-control" id="number" name="number" value="<?= $phone->number ?>">
+                            <input type="text" class="form-control" id="number<?= $phone->phone_id ?>" name="number" value="<?= $phone->number ?>">
                         </div>
+                        <input type="hidden" name="phone_id" value="<?= $phone->phone_id ?>">
+                        <input type="hidden" name="form_type" value="phone">
                         <button type="submit" class="btn btn-primary">Editar Número</button>
                     </div>
-                </div>
+                </form>
             <?php } ?>
-        </form>
-        <button id="btnEdit" type="submit" class="btn btn-primary">Guardar Cambios</button>
-
+        </div>
     </div>
 
 </body>

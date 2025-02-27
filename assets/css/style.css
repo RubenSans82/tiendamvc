@@ -31,3 +31,87 @@ body {
 
 
 }
+
+#form {
+display: grid;
+place-content: center;
+}
+
+/* Estilo para el contenedor de la tabla con scroll */
+.table-container {
+    max-height: 700px;
+    overflow-y: auto;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+/* Opcional: Fijar el encabezado de la tabla al hacer scroll */
+.table-container thead {
+    position: sticky;
+    top: 0;
+    background-color: #212529;
+    z-index: 1;
+}
+
+/* Asegurar que el contenedor tenga un ancho adecuado */
+.table-container table {
+    width: 100%;
+}
+
+/* Opcional: Estilo personalizado para el scrollbar */
+.table-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.table-container::-webkit-scrollbar-track {
+    background-color: #f1f1f1;
+}
+
+.table-container::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 4px;
+}
+
+.table-container::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+}
+
+/* Ajuste para el nuevo diseño de productos */
+.product-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: space-between;
+}
+
+.form-container {
+    flex: 0 0 25%;
+    max-width: 25%;
+    width: 25%;
+
+
+}
+
+.table-section {
+    flex: 0 0 70%;
+    max-width: 70%;
+    width: 70%;
+
+}
+
+/* Responsive para pantallas pequeñas */
+@media (max-width: 992px) {
+    .form-container, .table-section {
+        flex: 0 0 100%;
+        max-width: 100%;
+        width: 100%;
+    }
+    
+    .form-container {
+        margin-bottom: 30px;
+    }
+}
+
+
+
+

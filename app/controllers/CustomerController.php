@@ -55,20 +55,50 @@ class CustomerController extends Controller
         if (isset($params[0])) {
             $customer = Customer::find($params[0]);
             if ($customer) {
-                if (isset($_POST['name'])) {
-                    $customer->name = $_POST['name'];
-                    $customer->addresses[0]->street = $_POST['street'];
-                    $customer->addresses[0]->city = $_POST['city'];
-                    $customer->addresses[0]->zip_code = $_POST['zip_code'];
-                    $customer->addresses[0]->country = $_POST['country'];
-                    $customer->phones[0]->number = $_POST['number'];
-                    $customer->save();
-                    $customer->addresses[0]->save();
-                    $customer->phones[0]->save();
-
-                    header('Location: ' . base_url() . 'customer/index');
+                // Manejar actualización de dirección
+                if (isset($_POST['form_type']) && $_POST['form_type'] === 'address') {
+                    $address_id = isset($_POST['address_id']) ? $_POST['address_id'] : null;
+                    
+                    if ($address_id) {
+                        $address = Address::find($address_id);
+                        if ($address) {
+                            $address->street = $_POST['street'];
+                            $address->city = $_POST['city'];
+                            $address->zip_code = $_POST['zip_code'];
+                            $address->country = $_POST['country'];
+                            $address->save();
+                        }
+                    }
+                    
+                    header('Location: ' . base_url() . 'customer/edit/' . $customer->customer_id);
                     exit;
                 }
+                
+                // Manejar actualización de teléfono
+                if (isset($_POST['form_type']) && $_POST['form_type'] === 'phone') {
+                    $phone_id = isset($_POST['phone_id']) ? $_POST['phone_id'] : null;
+                    
+                    if ($phone_id) {
+                        $phone = Phone::find($phone_id);
+                        if ($phone) {
+                            $phone->number = $_POST['number'];
+                            $phone->save();
+                        }
+                    }
+                    
+                    header('Location: ' . base_url() . 'customer/edit/' . $customer->customer_id);
+                    exit;
+                }
+                
+                // Manejar actualización del cliente (nombre)
+                if (isset($_POST['form_type']) && $_POST['form_type'] === 'customer') {
+                    $customer->name = $_POST['name'];
+                    $customer->save();
+                    
+                    header('Location: ' . base_url() . 'customer/edit/' . $customer->customer_id);
+                    exit;
+                }
+                
                 $this->view('edit', $customer);
                 exit;
             }
