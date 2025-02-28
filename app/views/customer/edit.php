@@ -14,26 +14,14 @@
 <body>
     <nav class="navbar bg-dark border-bottom border-body" data-bs-theme="dark">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">Editar Datos de <?= $data->name ?></a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarText">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="<?=base_url()?>admin/index">Inicio</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Features</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Pricing</a>
-                    </li>
-                </ul>
-                <span class="navbar-text">
-                    Navbar text with an inline element
-                </span>
-            </div>
+            <a class="navbar-brand" href="#">Editar Cliente</a>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="<?= base_url() ?>admin/index">Inicio</a></li>
+                    <li class="breadcrumb-item"><a href="<?= base_url() ?>customer/index">Clientes</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Editar Cliente</li>
+                </ol>
+            </nav>
         </div>
     </nav>
     </br>
@@ -41,8 +29,8 @@
 
         <div class="formEdit">
             <!-- Formulario para editar el nombre del cliente -->
-            <form class="card mb-3" method="POST" action="<?= base_url() ?>customer/edit/<?= $data->customer_id ?>">
-                <div class="card-body">
+            <form method="POST" action="<?= base_url() ?>customer/edit/<?= $data->customer_id ?>">
+                <div class="form-container2">
                     <h5 class="card-title">Datos del Cliente</h5>
                     <div class="mb-3">
                         <label for="name" class="form-label">Nombre</label>
@@ -53,10 +41,10 @@
                 </div>
             </form>
 
-            <?php foreach ($data->addresses as $clave=>$address) { ?>
-                <form class="card mb-3" method="POST" action="<?= base_url() ?>customer/edit/<?= $data->customer_id ?>">
-                    <div class="card-body">
-                        <h5 class="card-title">Dirección <?=$clave+1?></h5>
+            <?php foreach ($data->addresses as $clave => $address) { ?>
+                <form method="POST" action="<?= base_url() ?>customer/edit/<?= $data->customer_id ?>">
+                    <div class="form-container2">
+                        <h5 class="card-title">Dirección <?= $clave + 1 ?></h5>
                         <div class="mb-3">
                             <label for="street" class="form-label">Calle</label>
                             <input type="text" class="form-control" id="street<?= $address->address_id ?>" name="street" value="<?= $address->street ?>">
@@ -79,20 +67,22 @@
                     </div>
                 </form>
             <?php } ?>
-            <?php foreach ($data->phones as $clave=>$phone) { ?>
-                <form class="card mb-3" method="POST" action="<?= base_url() ?>customer/edit/<?= $data->customer_id ?>">
-                    <div class="card-body">
-                        <h5 class="card-title">Teléfono <?=$clave+1?></h5>
+            <form method="POST" action="<?= base_url() ?>customer/edit/<?= $data->customer_id ?>">
+                <div class="form-container2">
+                    <h5 class="card-title">Teléfonos</h5>
+
+                    <?php foreach ($data->phones as $clave => $phone) { ?>
                         <div class="mb-3">
-                            <label for="number" class="form-label">Número</label>
-                            <input type="text" class="form-control" id="number<?= $phone->phone_id ?>" name="number" value="<?= $phone->number ?>">
+                            <label for="number<?= $phone->phone_id ?>" class="form-label">Teléfono <?= $clave + 1 ?></label>
+                            <input type="text" class="form-control" id="number<?= $phone->phone_id ?>"
+                                name="phone[<?= $phone->phone_id ?>]" value="<?= $phone->number ?>">
                         </div>
-                        <input type="hidden" name="phone_id" value="<?= $phone->phone_id ?>">
-                        <input type="hidden" name="form_type" value="phone">
-                        <button type="submit" class="btn btn-primary">Editar Número</button>
-                    </div>
-                </form>
-            <?php } ?>
+                    <?php } ?>
+
+                    <input type="hidden" name="form_type" value="phone">
+                    <button type="submit" class="btn btn-primary">Actualizar Teléfonos</button>
+                </div>
+            </form>
         </div>
     </div>
 

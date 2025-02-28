@@ -11,7 +11,7 @@ class LoginController extends Controller
     public function index(...$params)
     {
 
-        $this->view("login");
+        $this->view("home");
     }
     public function login(...$params)
     {
@@ -24,7 +24,7 @@ class LoginController extends Controller
                 header("Location: " . base_url() . "admin");
             } else {
                 $error = "User or pass incorrect";
-                $this->view("login", [$error]);
+                $this->view("home", [$error]);
             }
             exit();
         } else {

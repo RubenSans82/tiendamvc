@@ -216,7 +216,9 @@ document.addEventListener('click', function(e) {
         const button = e.target.classList.contains('edit-btn') ? e.target : e.target.parentElement;
         const productId = button.getAttribute('data-id');
         console.log('Edit product:', productId);
-        // Implementar lógica de edición aquí
+        
+        // Redirect to the edit page with the product ID
+        window.location.href = `${window.location.origin}/tiendamvc/product/edit/${productId}`;
     }
     
     if (e.target.classList.contains('delete-btn') || 

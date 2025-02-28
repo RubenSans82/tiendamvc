@@ -72,6 +72,24 @@ class ApiController extends Controller
         header('Content-Type: application/json');
         echo json_encode($formattedProducts);
     }
+
+    public function product(...$params)
+    {
+        if (!isset($params[0])) {
+            echo json_encode(['error' => 'Product ID is required']);
+            return;
+        }
+
+        $productId = $params[0];
+        $product = Product::with(['category', 'provider'])->find($productId);
+        
+        if (!$product) {
+            echo json_encode(['error' => 'Product not found']);
+            return;
+        }
+        
+        echo json_encode($product);
+    }
     
     // Función auxiliar para formatear productos de manera consistente
     private function formatProducts($products)
