@@ -90,19 +90,22 @@ body {
 .form-container {
     flex: 1;
     min-width: 300px;
-    max-width: 450px;
+    max-width: 600px;
     padding: 1rem;
     background-color: #212529;
     width: 25%;
     color: white;
     height: fit-content;
     margin-top: 42px;
+
 }
+
+
 
 .form-container2 {
     flex: 1;
     min-width: 300px;
-    max-width: 450px;
+    max-width: 600px;
     padding: 1rem;
     background-color: #212529;
     width: 25%;
@@ -110,6 +113,20 @@ body {
     height: 440px;
     margin-top: 42px;
     position: relative;
+}
+
+.form-container3 {
+    flex: 1;
+    min-width: 300px;
+    max-width: 600px;
+    padding: 1rem;
+    background-color: #212529;
+    width: 70vh;
+    color: white;
+    height: 530px;
+    margin-top: 42px;
+    position: relative;
+    place-self: center;
 }
 
 .table-section {

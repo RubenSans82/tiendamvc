@@ -39,7 +39,7 @@ class ProductController extends Controller
         $categories = Category::all();
         $providers = Provider::all();
         
-        // Pass data to the view
+        // Pass data to the view - FIXED: Use the correct path 'product/edit'
         $this->view('edit', [
             'product' => $product,
             'categories' => $categories,
