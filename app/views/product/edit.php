@@ -78,7 +78,12 @@
                             <input type="number" min="0" step="0.01" class="form-control" id="price" name="price" value="<?= htmlspecialchars($data['product']->price) ?>">
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary">Actualizar Producto</button>
+                    <div class="card-footer d-flex justify-content-between">
+                    <a href="<?= base_url() ?>product/index" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left"></i> Volver
+                        </a>
+                    <button type="submit" class="btn btn-outline-primary">Actualizar Producto</button>
+                    </div>
                 </div>
             </form>
         </div>

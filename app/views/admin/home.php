@@ -60,9 +60,9 @@
                                 Productos
                                 <span class="badge bg-info rounded-pill"><i class="bi bi-box"></i></span>
                             </a>
-                            <a href="<?= base_url() ?>category/home" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                                Categorías
-                                <span class="badge bg-warning rounded-pill"><i class="bi bi-tag"></i></span>
+                            <a href="<?= base_url() ?>order/home" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                Pedidos
+                                <span class="badge bg-warning rounded-pill"><i class="bi bi-receipt"></i></span>
                             </a>
                         </div>
                     </div>

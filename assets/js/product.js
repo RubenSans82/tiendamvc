@@ -154,12 +154,8 @@ function showProducts(datos) {
                 <td>${product.stock}</td>
                 <td>${product.price}€</td>
                 <td>
-                    <button class="btn btn-sm btn-warning edit-btn" data-id="${product.product_id}">
-                        <i class="fas fa-edit"></i>
-                    </button>
-                    <button class="btn btn-sm btn-danger delete-btn" data-id="${product.product_id}">
-                        <i class="fas fa-trash"></i>
-                    </button>
+                    <a href="http://localhost/tiendamvc/product/edit/${product.product_id}" class="btn btn-outline-secondary"><i class="fas fa-edit"></i></a>
+                    <a href="#" class="btn btn-outline-danger delete-product" data-id="${product.product_id}"><i class="fas fa-trash"></i></a>
                 </td>
             `;
             
@@ -211,19 +207,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Setup event listeners for edit and delete buttons
 document.addEventListener('click', function(e) {
-    if (e.target.classList.contains('edit-btn') || 
-        (e.target.parentElement && e.target.parentElement.classList.contains('edit-btn'))) {
-        const button = e.target.classList.contains('edit-btn') ? e.target : e.target.parentElement;
-        const productId = button.getAttribute('data-id');
-        console.log('Edit product:', productId);
-        
-        // Redirect to the edit page with the product ID
-        window.location.href = `${window.location.origin}/tiendamvc/product/edit/${productId}`;
-    }
+    // Edit functionality is now handled directly by the href attribute
     
-    if (e.target.classList.contains('delete-btn') || 
-        (e.target.parentElement && e.target.parentElement.classList.contains('delete-btn'))) {
-        const button = e.target.classList.contains('delete-btn') ? e.target : e.target.parentElement;
+    // For delete functionality
+    if (e.target.classList.contains('delete-product') || 
+        (e.target.parentElement && e.target.parentElement.classList.contains('delete-product'))) {
+        e.preventDefault(); // Prevent the default behavior of the anchor tag
+        const button = e.target.classList.contains('delete-product') ? e.target : e.target.parentElement;
         const productId = button.getAttribute('data-id');
         console.log('Delete product:', productId);
         
