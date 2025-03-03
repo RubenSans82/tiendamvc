@@ -4,6 +4,8 @@ namespace Formacom\controllers;
 
 use Formacom\Core\Controller;
 use Formacom\Models\Provider;
+use Formacom\Models\Address;
+use Formacom\Models\Phone;
 use Exception;
 
 class ProviderController extends Controller
@@ -113,12 +115,83 @@ class ProviderController extends Controller
         if (isset($params[0])) {
             $provider = Provider::find($params[0]);
             if ($provider) {
-                if (isset($_POST['name'])) {
-                    $provider->name = $_POST['name'];
-                    $provider->save();
+                // Handle different form submissions based on form_type
+                if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                    $form_type = $_POST['form_type'] ?? '';
                     
-                    header('Location: ' . base_url() . 'provider/edit/' . $provider->provider_id);
-                    exit;
+                    switch ($form_type) {
+                        case 'provider':
+                            // Update provider basic info
+                            $provider->name = $_POST['name'] ?? $provider->name;
+                            $provider->web = $_POST['web'] ?? $provider->web;
+                            $provider->updated_at = date('Y-m-d H:i:s');
+                            $provider->save();
+                            break;
+                            
+                        case 'new_address':
+                            // Add new address
+                            $address = new Address();
+                            $address->street = $_POST['street'] ?? '';
+                            $address->city = $_POST['city'] ?? '';
+                            $address->zip_code = $_POST['zip_code'] ?? 0;
+                            $address->country = $_POST['country'] ?? '';
+                            $address->provider_id = $provider->provider_id;
+                            $address->created_at = date('Y-m-d H:i:s');
+                            $address->updated_at = date('Y-m-d H:i:s');
+                            $address->save();
+                            
+                            // Redirect with success message
+                            header('Location: ' . base_url() . 'provider/edit/' . $provider->provider_id . '?success=added&type=address');
+                            exit;
+                            
+                        case 'new_phone':
+                            // Add new phone
+                            $phone = new Phone();
+                            $phone->number = $_POST['new_phone'] ?? '';
+                            $phone->provider_id = $provider->provider_id;
+                            $phone->created_at = date('Y-m-d H:i:s');
+                            $phone->updated_at = date('Y-m-d H:i:s');
+                            $phone->save();
+                            
+                            // Redirect with success message
+                            header('Location: ' . base_url() . 'provider/edit/' . $provider->provider_id . '?success=added&type=phone');
+                            exit;
+                            
+                        case 'address':
+                            // Update existing address
+                            if (isset($_POST['address_id'])) {
+                                $address = Address::find($_POST['address_id']);
+                                if ($address) {
+                                    $address->street = $_POST['street'] ?? $address->street;
+                                    $address->city = $_POST['city'] ?? $address->city;
+                                    $address->zip_code = $_POST['zip_code'] ?? $address->zip_code;
+                                    $address->country = $_POST['country'] ?? $address->country;
+                                    $address->updated_at = date('Y-m-d H:i:s');
+                                    $address->save();
+                                }
+                            }
+                            break;
+                            
+                        case 'phone':
+                            // Update existing phones
+                            if (isset($_POST['phone']) && is_array($_POST['phone'])) {
+                                foreach ($_POST['phone'] as $phone_id => $number) {
+                                    $phone = Phone::find($phone_id);
+                                    if ($phone) {
+                                        $phone->number = $number;
+                                        $phone->updated_at = date('Y-m-d H:i:s');
+                                        $phone->save();
+                                    }
+                                }
+                            }
+                            break;
+                    }
+                    
+                    // Redirect back to edit page unless we've handled redirection already
+                    if (!in_array($form_type, ['new_address', 'new_phone'])) {
+                        header('Location: ' . base_url() . 'provider/edit/' . $provider->provider_id);
+                        exit;
+                    }
                 }
                 
                 $this->view('edit', $provider);

@@ -10,60 +10,158 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="<?= base_url() ?>assets/css/admin.css">
+    <style>
+        .admin-card {
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+            text-align: center;
+            height: 100%;
+            background-color: #2c3034;
+        }
+        
+        .admin-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+        }
+        
+        .admin-card .card-body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+        
+        .admin-card .icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .admin-card .card-title {
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: #e9ecef;
+        }
+        
+        .logout-link {
+            color: #ff6b6b;
+        }
+        
+        .logout-link:hover {
+            color: #fa5252;
+        }
+        
+        .card {
+            background-color: #343a40;
+            color: #e9ecef;
+        }
+        
+        .card-header {
+            border-bottom: 1px solid #495057;
+        }
+        
+        h1, h3 {
+            color: #e9ecef;
+        }
+
+        .border-primary {
+            background-color: #3a3f44;
+        }
+
+        .border-danger {
+            background-color: #3f3a3a;
+        }
+
+        .border-success {
+            background-color: #3a3f3a;
+        }
+
+        .border-warning {
+            background-color: #3f3f3a;
+        }
+    </style>
 </head>
 
 <body>
-<nav class="navbar bg-dark border-bottom border-body" data-bs-theme="dark">
+    <nav class="navbar bg-dark border-bottom border-body" data-bs-theme="dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">Panel de Administración</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarText">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="<?=base_url()?>customer/index">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Features</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Pricing</a>
-                    </li>
-                </ul>
-                <span class="navbar-text">
-                    Navbar text with an inline element
-                </span>
-            </div>
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0 flex-row">
+                <li class="nav-item ms-3">
+                    <a class="nav-link logout-link" href="<?=base_url()?>login/logout" title="Cerrar Sesión">
+                        <i class="bi bi-box-arrow-right"></i> Salir
+                    </a>
+                </li>
+            </ul>
         </div>
     </nav>
+    
     <div class="container mt-5">
         <h1 class="text-center mb-4">Panel de Administración</h1>
 
         <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card shadow">
+            <div class="col-11 col-md-10">
+                <div class="card shadow mb-4">
                     <div class="card-header bg-dark text-white">
                         <h3 class="mb-0">Secciones</h3>
                     </div>
-                    <div class="card-body bg-secondary">
-                        <div class="list-group">
-                            <a href="<?= base_url() ?>customer/home" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                                Clientes
-                                <span class="badge bg-primary rounded-pill"><i class="bi bi-people"></i></span>
-                            </a>
-                            <a href="<?= base_url() ?>provider/home" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                                Proveedores
-                                <span class="badge bg-success rounded-pill"><i class="bi bi-truck"></i></span>
-                            </a>
-                            <a href="<?= base_url() ?>product/home" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                                Productos
-                                <span class="badge bg-info rounded-pill"><i class="bi bi-box"></i></span>
-                            </a>
-                            <a href="<?= base_url() ?>order/home" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                                Pedidos
-                                <span class="badge bg-warning rounded-pill"><i class="bi bi-receipt"></i></span>
-                            </a>
+                    <div class="card-body bg-dark p-4">
+                        <div class="row g-4">
+                            <!-- Clientes -->
+                            <div class="col-12 col-sm-6 col-md-6 col-lg-3">
+                                <a href="<?= base_url() ?>customer/home" class="text-decoration-none">
+                                    <div class="card admin-card border-primary h-100">
+                                        <div class="card-body">
+                                            <div class="icon text-primary">
+                                                <i class="bi bi-people"></i>
+                                            </div>
+                                            <h5 class="card-title">Clientes</h5>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            
+                            <!-- Proveedores -->
+                            <div class="col-12 col-sm-6 col-md-6 col-lg-3">
+                                <a href="<?= base_url() ?>provider/home" class="text-decoration-none">
+                                    <div class="card admin-card border-danger h-100">
+                                        <div class="card-body">
+                                            <div class="icon text-danger">
+                                                <i class="bi bi-truck"></i>
+                                            </div>
+                                            <h5 class="card-title">Proveedores</h5>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            
+                            <!-- Productos -->
+                            <div class="col-12 col-sm-6 col-md-6 col-lg-3">
+                                <a href="<?= base_url() ?>product/home" class="text-decoration-none">
+                                    <div class="card admin-card border-success h-100">
+                                        <div class="card-body">
+                                            <div class="icon text-success">
+                                                <i class="bi bi-box"></i>
+                                            </div>
+                                            <h5 class="card-title">Productos</h5>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            
+                            <!-- Pedidos -->
+                            <div class="col-12 col-sm-6 col-md-6 col-lg-3">
+                                <a href="<?= base_url() ?>order/home" class="text-decoration-none">
+                                    <div class="card admin-card border-warning h-100">
+                                        <div class="card-body">
+                                            <div class="icon text-warning">
+                                                <i class="bi bi-receipt"></i>
+                                            </div>
+                                            <h5 class="card-title">Pedidos</h5>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -149,6 +149,35 @@ class CustomerController extends Controller
         if (isset($params[0])) {
             $customer = Customer::find($params[0]);
             if ($customer) {
+                // Manejar agregar nueva dirección
+                if (isset($_POST['form_type']) && $_POST['form_type'] === 'new_address') {
+                    $address = new Address();
+                    $address->street = $_POST['street'];
+                    $address->city = $_POST['city'];
+                    $address->zip_code = $_POST['zip_code'];
+                    $address->country = $_POST['country'];
+                    $address->customer_id = $customer->customer_id;
+                    $address->created_at = date('Y-m-d H:i:s');
+                    $address->updated_at = date('Y-m-d H:i:s');
+                    $address->save();
+                    
+                    header('Location: ' . base_url() . 'customer/edit/' . $customer->customer_id);
+                    exit;
+                }
+                
+                // Manejar agregar nuevo teléfono
+                if (isset($_POST['form_type']) && $_POST['form_type'] === 'new_phone') {
+                    $phone = new Phone();
+                    $phone->number = $_POST['new_phone'];
+                    $phone->customer_id = $customer->customer_id;
+                    $phone->created_at = date('Y-m-d H:i:s');
+                    $phone->updated_at = date('Y-m-d H:i:s');
+                    $phone->save();
+                    
+                    header('Location: ' . base_url() . 'customer/edit/' . $customer->customer_id);
+                    exit;
+                }
+                
                 // Manejar actualización de dirección
                 if (isset($_POST['form_type']) && $_POST['form_type'] === 'address') {
                     $address_id = isset($_POST['address_id']) ? $_POST['address_id'] : null;

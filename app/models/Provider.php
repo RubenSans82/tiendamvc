@@ -24,3 +24,4 @@ class Provider extends Model
         return $this->hasMany(Product::class, "provider_id");
     }
 }
+?>

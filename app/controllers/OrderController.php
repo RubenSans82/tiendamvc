@@ -136,4 +136,111 @@ class OrderController extends Controller
             echo json_encode(['success' => false, 'message' => 'Error al eliminar el pedido: ' . $e->getMessage()]);
         }
     }
+
+    public function edit($orderId)
+    {
+        $order = Order::with(['customer', 'products'])->find($orderId);
+        if (!$order) {
+            header("Location: " . base_url() . "order/index");
+            exit;
+        }
+        
+        $products = Product::all();
+        $customers = Customer::all();
+        
+        $this->view('edit', [
+            'order' => $order,
+            'products' => $products,
+            'customers' => $customers
+        ]);
+    }
+    
+    public function getOrderData($orderId)
+    {
+        // Set JSON response header
+        header('Content-Type: application/json');
+        
+        try {
+            $order = Order::with(['customer', 'products'])->find($orderId);
+            
+            if (!$order) {
+                echo json_encode(['success' => false, 'message' => 'Pedido no encontrado']);
+                return;
+            }
+            
+            echo json_encode(['success' => true, 'order' => $order]);
+        } catch (Exception $e) {
+            echo json_encode(['success' => false, 'message' => 'Error al cargar los datos: ' . $e->getMessage()]);
+        }
+    }
+    
+    public function update()
+    {
+        // Set JSON response header
+        header('Content-Type: application/json');
+        
+        $postData = json_decode(file_get_contents('php://input'), true);
+        
+        if (!$postData) {
+            echo json_encode(['success' => false, 'message' => 'Datos no recibidos']);
+            exit;
+        }
+        
+        try {
+            // Start a transaction
+            DB::beginTransaction();
+            
+            // Find the order
+            $order = Order::find($postData['order_id']);
+            
+            if (!$order) {
+                DB::rollBack();
+                echo json_encode(['success' => false, 'message' => 'Pedido no encontrado']);
+                return;
+            }
+            
+            // Update order data
+            $order->customer_id = $postData['customer_id'];
+            $order->discount = isset($postData['discount']) ? $postData['discount'] : 0;
+            $order->updated_at = date('Y-m-d H:i:s');
+            $order->save();
+            
+            // Detach all existing products
+            $order->products()->detach();
+            
+            // Debug
+            error_log('Products data: ' . json_encode($postData['products']));
+            
+            // Attach updated products
+            if (isset($postData['products']) && is_array($postData['products'])) {
+                foreach ($postData['products'] as $productData) {
+                    // Find the product to ensure it exists
+                    $product = Product::find($productData['id']);
+                    
+                    if ($product) {
+                        // Ensure quantity and price are properly set
+                        $quantity = isset($productData['quantity']) && is_numeric($productData['quantity']) ? $productData['quantity'] : 1;
+                        $price = isset($productData['price']) && is_numeric($productData['price']) ? $productData['price'] : $product->price;
+                        
+                        // Attach product with quantity and price
+                        $order->products()->attach($productData['id'], [
+                            'quantity' => $quantity,
+                            'price' => $price,
+                            'created_at' => date('Y-m-d H:i:s'),
+                            'updated_at' => date('Y-m-d H:i:s')
+                        ]);
+                    }
+                }
+            }
+            
+            // Commit the transaction
+            DB::commit();
+            
+            echo json_encode(['success' => true, 'message' => 'Pedido actualizado correctamente']);
+        } catch (Exception $e) {
+            // Rollback the transaction in case of error
+            DB::rollBack();
+            echo json_encode(['success' => false, 'message' => 'Error al actualizar el pedido: ' . $e->getMessage()]);
+        }
+    }
 }
