@@ -72,3 +72,10 @@
     color: #adb5bd;
     opacity: 1;
 }
+
+.alert-info {
+    --bs-alert-color: #198754;
+    --bs-alert-bg: #343a40;
+    --bs-alert-border-color: #198754;
+    --bs-alert-link-color: #198754;
+}

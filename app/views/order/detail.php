@@ -59,8 +59,7 @@
                 <div class="card">
                     <div class="card-header bg-dark text-white">
                         <h5 class="mb-0">
-                            Detalles del Pedido 
-                            <span class="badge bg-success">#<?= $data['order']->order_id ?></span>
+                            Detalles del Pedido #<?= $data['order']->order_id ?>
                         </h5>
                     </div>
                     <div class="card-body">
@@ -100,7 +99,7 @@
                         <a href="<?= base_url() ?>order/index" class="btn btn-outline-secondary">
                             <i class="fas fa-arrow-left"></i> Volver
                         </a>
-                        <a href="<?= base_url() ?>order/edit/<?= $data['order']->order_id ?>" class="btn btn-outline-primary">
+                        <a href="<?= base_url() ?>order/edit/<?= $data['order']->order_id ?>" class="btn btn-outline-warning">
                             <i class="fas fa-edit"></i> Editar
                         </a>
                     </div>

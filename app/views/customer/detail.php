@@ -60,8 +60,7 @@
                 <div class="card">
                     <div class="card-header bg-dark text-white">
                         <h5 class="mb-0">
-                            Información del Cliente 
-                            <span class="badge bg-success">#<?= $data->customer_id ?></span>
+                            Información de <?= $data->name ?> 
                         </h5>
                     </div>
                     <div class="card-body">
@@ -91,7 +90,7 @@
                         <a href="<?= base_url() ?>customer/index" class="btn btn-outline-secondary">
                             <i class="fas fa-arrow-left"></i> Volver
                         </a>
-                        <a href="<?= base_url() ?>customer/edit/<?= $data->customer_id ?>" class="btn btn-outline-primary">
+                        <a href="<?= base_url() ?>customer/edit/<?= $data->customer_id ?>" class="btn btn-outline-warning">
                             <i class="fas fa-edit"></i> Editar
                         </a>
                     </div>

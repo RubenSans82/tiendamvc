@@ -32,7 +32,7 @@
             <form id="productEditForm">
                 <input type="hidden" id="product_id" value="<?= $data['product']->product_id ?>">
                 <div class="form-container3">
-                    <h5 class="card-title">Datos del Producto</h5>
+                    <h5 class="card-title">Datos de <?= $data['product']->name ?></h5>
 
                     <div class="mb-3">
                         <label for="name" class="form-label">Nombre</label>

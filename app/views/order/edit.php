@@ -11,14 +11,49 @@
     <link rel="stylesheet" href="<?= base_url() ?>assets/css/style.css">
     <link rel="stylesheet" href="<?= base_url() ?>assets/css/order.css">
     <script src="<?= base_url() ?>assets/js/order-edit.js" defer></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.2.2/css/dataTables.dataTables.min.css">
+
 </head>
 
 <body>
+
+    <style>
+        .dt-container {
+            background: #212529;
+            color: white;
+            padding-top: 5px;
+            padding-bottom: 5px;
+
+        }
+
+        div.dt-container .dt-paging .dt-paging-button.disabled {
+            background: #212529;
+            color: #6c757d !important;
+        }
+
+        div.dt-layout-start {
+            padding: 0 20px;
+        }
+
+        .dt-search {
+            padding: 0 20px;
+        }
+
+        .dt-paging-button {
+            background: #212529;
+            color: white !important;
+        }
+
+        select.dt-input option {
+            background: #212529;
+            color: white !important;
+        }
+    </style>
+
     <nav class="navbar bg-dark border-bottom border-body" data-bs-theme="dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">
-                Editar Pedido #<?= $data['order']->order_id ?>
-                <span id="orderIdBadge" class="badge bg-secondary">ID: <?= $data['order']->order_id ?></span>
+                Editar Pedido
             </a>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
@@ -38,7 +73,7 @@
                 <div class="card mb-4">
                     <div class="card-header bg-dark text-white">
                         <h5 class="mb-0">
-                            Datos del Pedido 
+                            Datos del Pedido #<?= $data['order']->order_id ?>
                         </h5>
                     </div>
                     <div class="card-body">
@@ -93,7 +128,7 @@
                                         <label for="price" class="form-label">Precio (€)</label>
                                         <input type="text" class="form-control" id="price" name="price" readonly>
                                     </div>
-                                    <button type="button" id="addProductBtn" class="btn btn-primary w-100">
+                                    <button type="button" id="addProductBtn" class="btn btn-outline-primary w-100">
                                         <i class="fas fa-plus"></i> Añadir Producto
                                     </button>
                                 </form>
@@ -115,7 +150,7 @@
                                     <h5>Total: <span id="orderTotal">0.00</span>€</h5>
                                 </div>
                                 <div class="mt-auto">
-                                    <button type="button" id="saveOrderBtn" class="btn btn-success w-100 mb-2">
+                                    <button type="button" id="saveOrderBtn" class="btn btn-outline-success w-100 mb-2">
                                         <i class="fas fa-save"></i> Guardar Cambios
                                     </button>
                                     <a href="<?= base_url() ?>order/index" class="btn btn-outline-secondary w-100">
@@ -126,7 +161,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Contenedor para mensajes de alerta -->
                 <div id="alertContainer" class="mt-3"></div>
             </div>
@@ -151,7 +186,7 @@
                             No hay productos añadidos al pedido.
                         </div>
 
-                        <table id="orderProductsTable" class="table table-striped table-hover d-none">
+                        <table id="orderProductsTable" class="table table-striped table-secondary table-hover d-none">
                             <thead class="table-dark">
                                 <tr>
                                     <th scope="col" class="col-1">ID </th>
@@ -183,6 +218,22 @@
             </div>
         </div>
     </div>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="//cdn.datatables.net/2.2.2/js/dataTables.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            new DataTable('#orderProductsTable', {
+                language: {
+                    url: 'https://cdn.datatables.net/plug-ins/2.2.2/i18n/es-ES.json',
+                },
+                lengthMenu: [10, 25, 50, 100],
+                columnDefs: [{
+                    targets: [0, 5],
+                    searchable: false
+                }]
+            });
+        });
+    </script>
 </body>
 
 </html>

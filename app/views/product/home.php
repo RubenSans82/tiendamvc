@@ -62,7 +62,7 @@
                             <input type="number" min="0" class="form-control" id="price" placeholder="Precio" required>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-secondary w-100">Guardar</button>
+                    <button type="submit" class="btn btn-outline-secondary w-100">Guardar</button>
                 </form>
 
                 <!-- Contenedor para mensajes de alerta -->

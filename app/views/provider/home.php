@@ -10,9 +10,44 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="<?= base_url() ?>assets/css/style.css">
     <script src="<?= base_url() ?>assets/js/provider.js" defer></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.2.2/css/dataTables.dataTables.min.css">
 </head>
 
 <body>
+
+    <style>
+        .dt-container {
+            background: #212529;
+            color: white;
+            padding-top: 5px;
+            padding-bottom: 5px;
+
+        }
+
+        div.dt-container .dt-paging .dt-paging-button.disabled {
+            background: #212529;
+            color: #6c757d !important;
+        }
+
+        div.dt-layout-start {
+            padding: 0 20px;
+        }
+
+        .dt-search {
+            padding: 0 20px;
+        }
+
+        .dt-paging-button {
+            background: #212529;
+            color: white !important;
+        }
+
+        select.dt-input option {
+            background: #212529;
+            color: white !important;
+        }
+    </style>
+
     <nav class="navbar bg-dark border-bottom border-body" data-bs-theme="dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">Proveedores</a>
@@ -61,7 +96,7 @@
                         <label for="country" class="form-label">País</label>
                         <input type="text" class="form-control" id="country" name="country" placeholder="País del Proveedor">
                     </div>
-                    <button type="submit" class="btn btn-secondary w-100">Guardar</button>
+                    <button type="submit" class="btn btn-outline-secondary w-100">Guardar</button>
                 </form>
                 <div id="alertContainer" class="mt-3"></div>
             </div>
@@ -78,7 +113,7 @@
                     <div id="noProvidersMessage" class="alert alert-info text-center d-none">
                         No hay proveedores disponibles.
                     </div>
-                    <table class="table table-striped table-dark table-hover">
+                    <table id="provider_table" class="table table-striped table-dark table-hover">
                         <thead>
                             <tr>
                                 <th scope="col" class="col-1">ID</th>
@@ -93,7 +128,7 @@
                                     <td><?= $provider->name ?></td>
                                     <td>
                                         <a href="<?= base_url() ?>provider/show/<?= $provider->provider_id ?>" class="btn btn-outline-secondary"><i class="fas fa-eye"></i></a>
-                                        <a href="<?= base_url() ?>provider/edit/<?= $provider->provider_id ?>" class="btn btn-outline-secondary"><i class="fas fa-edit"></i></a>
+                                        <a href="<?= base_url() ?>provider/edit/<?= $provider->provider_id ?>" class="btn btn-outline-warning"><i class="fas fa-edit"></i></a>
                                         <a href="#" class="btn btn-outline-danger delete-provider" data-id="<?= $provider->provider_id ?>"><i class="fas fa-trash"></i></a>
                                     </td>
                                 </tr>
@@ -109,17 +144,33 @@
         function deleteProvider(providerId) {
             if (confirm('Are you sure you want to delete this provider?')) {
                 fetch('<?= base_url() ?>provider/delete/' + providerId, {
-                    method: 'POST'
-                }).then(response => response.json())
-                  .then(data => {
-                      if (data.success) {
-                          location.reload();
-                      } else {
-                          alert(data.message);
-                      }
-                  });
+                        method: 'POST'
+                    }).then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            location.reload();
+                        } else {
+                            alert(data.message);
+                        }
+                    });
             }
         }
+    </script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="//cdn.datatables.net/2.2.2/js/dataTables.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            new DataTable('#provider_table', {
+                language: {
+                    url: 'https://cdn.datatables.net/plug-ins/2.2.2/i18n/es-ES.json',
+                },
+                lengthMenu: [10, 25, 50, 100],
+                columnDefs: [{
+                    targets: [0, 2],
+                    searchable: false
+                }]
+            });
+        });
     </script>
 </body>
 

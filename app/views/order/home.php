@@ -10,9 +10,44 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="<?= base_url() ?>assets/css/style.css">
     <script src="<?= base_url() ?>assets/js/order.js" defer></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.2.2/css/dataTables.dataTables.min.css">
+
 </head>
 
 <body>
+    <style>
+        .dt-container {
+            background: #212529;
+            color: white;
+            padding-top: 5px;
+            padding-bottom: 5px;
+
+        }
+
+        div.dt-container .dt-paging .dt-paging-button.disabled {
+            background: #212529;
+            color: #6c757d !important;
+        }
+
+        div.dt-layout-start {
+            padding: 0 20px;
+        }
+
+        .dt-search {
+            padding: 0 20px;
+        }
+
+        .dt-paging-button {
+            background: #212529;
+            color: white !important;
+        }
+
+        select.dt-input option {
+            background: #212529;
+            color: white !important;
+        }
+    </style>
+
     <nav class="navbar bg-dark border-bottom border-body" data-bs-theme="dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">Pedidos</a>
@@ -28,9 +63,9 @@
 
     <div class="container-fluid d-flex justify-content-center">
         <div class="order-container" style="width: 60%;">
-            <div class="d-flex justify-content-between align-items-center mb-3">
+            <div class="d-flex justify-content-between align-items-center mb-3 bg-dark text-white p-3">
                 <h3>Lista de pedidos</h3>
-                <a href="<?= base_url() ?>order/create" class="btn btn-primary">Crear Pedido</a>
+                <a href="<?= base_url() ?>order/create" class="btn btn-outline-primary">Crear Pedido</a>
             </div>
 
             <!-- Mensaje de carga - inicialmente oculto -->
@@ -45,10 +80,10 @@
             <div id="noOrdersMessage" class="alert alert-info text-center d-none">
                 No hay pedidos disponibles.
             </div>
-            <table class="table table-striped table-dark table-hover">
+            <table id="order_table" class="table table-striped table-dark table-hover">
                 <thead>
                     <tr>
-                        <th scope="col" class="col-1">ID</th>
+                        <th scope="col" class="col-1">Nº Ped.</th>
                         <th scope="col" class="col-4">Cliente</th>
                         <th scope="col" class="col-2">Fecha</th>
                         <th scope="col" class="col-2">Total</th>
@@ -64,7 +99,7 @@
                             <td><?= $order->total ?>€</td>
                             <td>
                                 <a href="<?= base_url() ?>order/show/<?= $order->order_id ?>" class="btn btn-outline-secondary"><i class="fas fa-eye"></i></a>
-                                <a href="<?= base_url() ?>order/edit/<?= $order->order_id ?>" class="btn btn-outline-secondary"><i class="fas fa-edit"></i></a>
+                                <a href="<?= base_url() ?>order/edit/<?= $order->order_id ?>" class="btn btn-outline-warning"><i class="fas fa-edit"></i></a>
                                 <a href="#" class="btn btn-outline-danger delete-order" data-id="<?= $order->order_id ?>"><i class="fas fa-trash"></i></a>
                             </td>
                         </tr>
@@ -86,6 +121,22 @@
                 }
             }
         }, true);
+    </script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="//cdn.datatables.net/2.2.2/js/dataTables.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            new DataTable('#order_table', {
+                language: {
+                    url: 'https://cdn.datatables.net/plug-ins/2.2.2/i18n/es-ES.json',
+                },
+                lengthMenu: [10, 25, 50, 100],
+                columnDefs: [{
+                    targets: [0, 2, 3, 4],
+                    searchable: false
+                }]
+            });
+        });
     </script>
 </body>
 

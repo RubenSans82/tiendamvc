@@ -154,7 +154,7 @@ function showProducts(datos) {
                 <td>${product.stock}</td>
                 <td>${product.price}€</td>
                 <td>
-                    <a href="http://localhost/tiendamvc/product/edit/${product.product_id}" class="btn btn-outline-secondary"><i class="fas fa-edit"></i></a>
+                    <a href="http://localhost/tiendamvc/product/edit/${product.product_id}" class="btn btn-outline-warning"><i class="fas fa-edit"></i></a>
                     <a href="#" class="btn btn-outline-danger delete-product" data-id="${product.product_id}"><i class="fas fa-trash"></i></a>
                 </td>
             `;

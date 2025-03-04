@@ -24,6 +24,34 @@
         #dt-length-0 {
             background-color: #212529;
         }
+
+        .table-responsive {
+            color: white !important;
+        }
+    </style>
+    <style>
+        .dt-container {
+            background: #212529;
+            color: white;
+
+        }
+
+        div.dt-container .dt-paging .dt-paging-button.disabled {
+            background: #212529;
+            color: #6c757d !important;
+        }
+
+
+
+        .dt-paging-button {
+            background: #212529;
+            color: white !important;
+        }
+
+        select.dt-input option {
+            background: #212529;
+            color: white !important;
+        }
     </style>
 </head>
 
@@ -47,7 +75,7 @@
             <div class="col-md-4">
                 <div class="card">
                     <div class="card-header bg-dark text-white">
-                        <h5 class="mb-0">Información del Proveedor <span class="badge bg-success">#<?= $data->provider_id ?></span></h5>
+                        <h5 class="mb-0">Información de <?= $data->name ?></h5>
                     </div>
                     <div class="card-body">
                         <p><strong>Nombre:</strong> <?= $data->name ?></p>
@@ -55,7 +83,7 @@
                         <p><strong>Fecha de Registro:</strong> <?= $data->created_at ?></p>
                         <p><strong>Última Actualización:</strong> <?= $data->updated_at ?></p>
 
-                        <a href="<?= base_url() ?>provider/edit/<?= $data->provider_id ?>" class="btn btn-warning w-100">
+                        <a href="<?= base_url() ?>provider/edit/<?= $data->provider_id ?>" class="btn btn-outline-warning w-100">
                             <i class="fas fa-edit me-2"></i> Editar Proveedor
                         </a>
                     </div>
@@ -163,17 +191,15 @@
         $(document).ready(function() {
             new DataTable('#products_provider', {
                 language: {
-                    url: '//cdn.datatables.net/plug-ins/2.2.2/i18n/es-ES.json',
+                    url: 'https://cdn.datatables.net/plug-ins/2.2.2/i18n/es-ES.json',
                 },
-                lengthMenu: [3, 5, 25, 50, -1],
-                    columnDefs: [
-                {
-                    targets: [0,3,4,5],
+                lengthMenu: [10, 25, 50, 100],
+                columnDefs: [{
+                    targets: [0, 3, 4, 5],
                     searchable: false
-                }
-            ] 
-                    });
-                });
+                }]
+            });
+        });
     </script>
 
 </body>

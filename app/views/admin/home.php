@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="<?= base_url() ?>assets/css/admin.css">
     <style>
         .admin-card {
+            position: relative;
             transition: transform 0.3s, box-shadow 0.3s;
             cursor: pointer;
             text-align: center;
@@ -79,6 +80,23 @@
         .border-warning {
             background-color: #3f3f3a;
         }
+
+        .count-badge {
+            background-color: rgba(255,255,255,0.15);
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            font-weight: bold;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            border: 2px solid;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
     </style>
 </head>
 
@@ -115,6 +133,7 @@
                                             <div class="icon text-primary">
                                                 <i class="bi bi-people"></i>
                                             </div>
+                                            <div class="count-badge text-primary" style="border-color: var(--bs-primary);"><?= $data['customerCount'] ?></div>
                                             <h5 class="card-title">Clientes</h5>
                                         </div>
                                     </div>
@@ -129,6 +148,7 @@
                                             <div class="icon text-danger">
                                                 <i class="bi bi-truck"></i>
                                             </div>
+                                            <div class="count-badge text-danger" style="border-color: var(--bs-danger);"><?= $data['providerCount'] ?></div>
                                             <h5 class="card-title">Proveedores</h5>
                                         </div>
                                     </div>
@@ -143,6 +163,7 @@
                                             <div class="icon text-success">
                                                 <i class="bi bi-box"></i>
                                             </div>
+                                            <div class="count-badge text-success" style="border-color: var(--bs-success);"><?= $data['productCount'] ?></div>
                                             <h5 class="card-title">Productos</h5>
                                         </div>
                                     </div>
@@ -157,6 +178,7 @@
                                             <div class="icon text-warning">
                                                 <i class="bi bi-receipt"></i>
                                             </div>
+                                            <div class="count-badge text-warning" style="border-color: var(--bs-warning);"><?= $data['orderCount'] ?></div>
                                             <h5 class="card-title">Pedidos</h5>
                                         </div>
                                     </div>
