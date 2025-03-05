@@ -84,7 +84,7 @@
                 <thead>
                     <tr>
                         <th scope="col" class="col-1">Nº Ped.</th>
-                        <th scope="col" class="col-4">Cliente</th>
+                        <th scope="col" class="col-3">Cliente</th>
                         <th scope="col" class="col-2">Fecha</th>
                         <th scope="col" class="col-2">Total</th>
                         <th scope="col" class="col-2">Acciones</th>
