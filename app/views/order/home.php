@@ -62,7 +62,7 @@
     </br>
 
     <div class="container-fluid d-flex justify-content-center">
-        <div class="order-container" style="width: 60%;">
+        <div class="order-container" style="width: 80%;">
             <div class="d-flex justify-content-between align-items-center mb-3 bg-dark text-white p-3">
                 <h3>Lista de pedidos</h3>
                 <a href="<?= base_url() ?>order/create" class="btn btn-outline-primary">Crear Pedido</a>
@@ -84,7 +84,7 @@
                 <thead>
                     <tr>
                         <th scope="col" class="col-1">Nº Ped.</th>
-                        <th scope="col" class="col-3">Cliente</th>
+                        <th scope="col" class="col-5">Cliente</th>
                         <th scope="col" class="col-2">Fecha</th>
                         <th scope="col" class="col-2">Total</th>
                         <th scope="col" class="col-2">Acciones</th>
