@@ -106,7 +106,7 @@
             <a class="navbar-brand" href="#">Panel de Administración</a>
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0 flex-row">
                 <li class="nav-item ms-3">
-                    <a class="nav-link logout-link" href="<?=base_url()?>login/logout" title="Cerrar Sesión">
+                    <a class="nav-link logout-link" href="<?= base_url()?>login/logout" title="Cerrar Sesión">
                         <i class="bi bi-box-arrow-right"></i> Salir
                     </a>
                 </li>
