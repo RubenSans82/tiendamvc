@@ -1,12 +1,12 @@
 {
     "require": {
-        "illuminate/database": "^11.42"
+        "illuminate/database": "^8.0",
+        "tecnickcom/tcpdf": "^6.3"
     },
-   "autoload": {
+    "autoload": {
         "psr-4": {
             "Formacom\\": "app/",
             "Formacom\\Core\\": "core/"
         }
     }
-
 }

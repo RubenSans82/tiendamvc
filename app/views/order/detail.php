@@ -99,6 +99,17 @@
                         <a href="<?= base_url() ?>order/index" class="btn btn-outline-secondary">
                             <i class="fas fa-arrow-left"></i> Volver
                         </a>
+                        <div class="dropdown">
+                            <button class="btn btn-outline-info dropdown-toggle" type="button" id="invoiceDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-file-invoice"></i> Factura
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="invoiceDropdown">
+                                <li><a class="dropdown-item" href="<?= base_url() ?>order/invoice/<?= $data['order']->order_id ?>/pdf" target="_blank"><i class="fas fa-file-pdf me-2"></i>Descargar PDF</a></li>
+                                <li><a class="dropdown-item" href="<?= base_url() ?>order/invoice/<?= $data['order']->order_id ?>/xml" download><i class="fas fa-file-code me-2"></i>Descargar XML</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#emailInvoiceModal"><i class="fas fa-envelope me-2"></i>Enviar por email</a></li>
+                            </ul>
+                        </div>
                         <a href="<?= base_url() ?>order/edit/<?= $data['order']->order_id ?>" class="btn btn-outline-warning">
                             <i class="fas fa-edit"></i> Editar
                         </a>
@@ -161,6 +172,37 @@
                             </tfoot>
                         </table>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Email Invoice Modal -->
+    <div class="modal fade" id="emailInvoiceModal" tabindex="-1" aria-labelledby="emailInvoiceModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-dark text-light">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="emailInvoiceModalLabel">Enviar Factura por Email</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="emailInvoiceForm" action="<?= base_url() ?>order/sendInvoice/<?= $data['order']->order_id ?>" method="post">
+                        <div class="mb-3">
+                            <label for="emailTo" class="form-label">Email de destino</label>
+                            <input type="email" class="form-control bg-dark text-light" id="emailTo" name="emailTo" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="format" class="form-label">Formato</label>
+                            <select class="form-select bg-dark text-light" id="format" name="format">
+                                <option value="pdf">PDF</option>
+                                <option value="xml">XML</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" form="emailInvoiceForm" class="btn btn-outline-primary">Enviar</button>
                 </div>
             </div>
         </div>

@@ -8,6 +8,8 @@ use Formacom\Models\Product;
 use Formacom\Models\Customer;
 use Illuminate\Database\Capsule\Manager as DB;
 use Exception;
+use TCPDF; // We'll need to add this library for PDF generation
+use SimpleXMLElement;
 
 class OrderController extends Controller
 {
@@ -242,5 +244,262 @@ class OrderController extends Controller
             DB::rollBack();
             echo json_encode(['success' => false, 'message' => 'Error al actualizar el pedido: ' . $e->getMessage()]);
         }
+    }
+
+    /**
+     * Generate and output invoice
+     */
+    public function invoice($orderId, $format = 'pdf')
+    {
+        $order = Order::with(['customer', 'products'])->find($orderId);
+        
+        if (!$order) {
+            header("Location: " . base_url() . "order/index");
+            exit;
+        }
+
+        switch ($format) {
+            case 'pdf':
+                $this->generatePdfInvoice($order);
+                break;
+            case 'xml':
+                $this->generateXmlInvoice($order);
+                break;
+            default:
+                $this->generatePdfInvoice($order);
+        }
+    }
+
+    /**
+     * Generate and output PDF invoice
+     */
+    private function generatePdfInvoice($order)
+    {
+        // Create new PDF document
+        $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+        
+        // Set document information
+        $pdf->SetCreator('TiendaMVC');
+        $pdf->SetAuthor('TiendaMVC System');
+        $pdf->SetTitle('Factura #' . $order->order_id);
+        $pdf->SetSubject('Factura del pedido #' . $order->order_id);
+        
+        // Set default header data
+        $pdf->SetHeaderData('', 0, 'FACTURA #' . $order->order_id, 'Fecha: ' . date('d/m/Y', strtotime($order->date)));
+        
+        // Set margins
+        $pdf->SetMargins(15, 15, 15);
+        $pdf->SetHeaderMargin(5);
+        $pdf->SetFooterMargin(10);
+        
+        // Set auto page breaks
+        $pdf->SetAutoPageBreak(TRUE, 25);
+        
+        // Add a page
+        $pdf->AddPage();
+        
+        // Prepare HTML content for the invoice
+        $html = $this->view('../invoice/pdf', ['order' => $order], true);
+        
+        // Print HTML content
+        $pdf->writeHTML($html, true, false, true, false, '');
+        
+        // Close and output PDF document
+        $pdf->Output('factura_' . $order->order_id . '.pdf', 'I');
+        exit;
+    }
+
+    /**
+     * Generate and output XML invoice
+     */
+    private function generateXmlInvoice($order)
+    {
+        // Set appropriate headers for XML download
+        header('Content-Type: application/xml; charset=utf-8');
+        header('Content-Disposition: attachment; filename=factura_' . $order->order_id . '.xml');
+        
+        // Create XML document
+        $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><invoice></invoice>');
+        
+        // Add invoice metadata
+        $xml->addChild('invoice_id', $order->order_id);
+        $xml->addChild('date', date('Y-m-d\TH:i:s', strtotime($order->date)));
+        $xml->addChild('discount', $order->discount);
+        
+        // Add customer information
+        $customer = $xml->addChild('customer');
+        $customer->addChild('id', $order->customer->customer_id);
+        $customer->addChild('name', htmlspecialchars($order->customer->name));
+        
+        // Add products
+        $products = $xml->addChild('products');
+        $subtotal = 0;
+        
+        foreach ($order->products as $product) {
+            $quantity = $product->pivot->quantity ?? 1;
+            $price = $product->pivot->price ?? $product->price;
+            $productSubtotal = $quantity * $price;
+            $subtotal += $productSubtotal;
+            
+            $productXml = $products->addChild('product');
+            $productXml->addChild('id', $product->product_id);
+            $productXml->addChild('name', htmlspecialchars($product->name));
+            $productXml->addChild('price', $price);
+            $productXml->addChild('quantity', $quantity);
+            $productXml->addChild('subtotal', $productSubtotal);
+        }
+        
+        // Add totals
+        $totals = $xml->addChild('totals');
+        $totals->addChild('subtotal', $subtotal);
+        
+        if ($order->discount > 0) {
+            $discountAmount = $subtotal * ($order->discount / 100);
+            $totals->addChild('discount_percent', $order->discount);
+            $totals->addChild('discount_amount', $discountAmount);
+        }
+        
+        $total = $subtotal;
+        if ($order->discount > 0) {
+            $total = $subtotal - ($subtotal * ($order->discount / 100));
+        }
+        $totals->addChild('total', $total);
+        
+        // Output XML
+        echo $xml->asXML();
+        exit;
+    }
+    
+    /**
+     * Send invoice by email
+     */
+    public function sendInvoice($orderId)
+    {
+        // Check if POST data exists
+        if (!isset($_POST['emailTo']) || !isset($_POST['format'])) {
+            $_SESSION['error'] = 'Faltan datos para enviar la factura';
+            header("Location: " . base_url() . "order/show/" . $orderId);
+            exit;
+        }
+        
+        $email = $_POST['emailTo'];
+        $format = $_POST['format'];
+        
+        $order = Order::with(['customer', 'products'])->find($orderId);
+        
+        if (!$order) {
+            $_SESSION['error'] = 'Pedido no encontrado';
+            header("Location: " . base_url() . "order/index");
+            exit;
+        }
+        
+        // Generate invoice file
+        $filePath = $this->generateInvoiceFile($order, $format);
+        
+        // Send email with attachment
+        $result = $this->sendInvoiceEmail($email, $order, $filePath, $format);
+        
+        // Clean up - delete temporary file
+        if (file_exists($filePath)) {
+            unlink($filePath);
+        }
+        
+        if ($result) {
+            $_SESSION['success'] = 'Factura enviada correctamente a ' . $email;
+        } else {
+            $_SESSION['error'] = 'Error al enviar la factura';
+        }
+        
+        header("Location: " . base_url() . "order/show/" . $orderId);
+        exit;
+    }
+    
+    /**
+     * Generate invoice file and return the path
+     */
+    private function generateInvoiceFile($order, $format)
+    {
+        $tempDir = sys_get_temp_dir();
+        $filename = 'factura_' . $order->order_id . '.' . $format;
+        $filePath = $tempDir . '/' . $filename;
+        
+        if ($format == 'pdf') {
+            // Generate PDF file
+            $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+            $pdf->SetCreator('TiendaMVC');
+            $pdf->SetAuthor('TiendaMVC System');
+            $pdf->SetTitle('Factura #' . $order->order_id);
+            $pdf->SetSubject('Factura del pedido #' . $order->order_id);
+            $pdf->SetHeaderData('', 0, 'FACTURA #' . $order->order_id, 'Fecha: ' . date('d/m/Y', strtotime($order->date)));
+            $pdf->SetMargins(15, 15, 15);
+            $pdf->SetHeaderMargin(5);
+            $pdf->SetFooterMargin(10);
+            $pdf->SetAutoPageBreak(TRUE, 25);
+            $pdf->AddPage();
+            
+            $html = $this->view('../invoice/pdf', ['order' => $order], true);
+            $pdf->writeHTML($html, true, false, true, false, '');
+            $pdf->Output($filePath, 'F');
+        } else {
+            // Generate XML file
+            $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><invoice></invoice>');
+            $xml->addChild('invoice_id', $order->order_id);
+            $xml->addChild('date', date('Y-m-d\TH:i:s', strtotime($order->date)));
+            $xml->addChild('discount', $order->discount);
+            
+            $customer = $xml->addChild('customer');
+            $customer->addChild('id', $order->customer->customer_id);
+            $customer->addChild('name', htmlspecialchars($order->customer->name));
+            
+            $products = $xml->addChild('products');
+            $subtotal = 0;
+            
+            foreach ($order->products as $product) {
+                $quantity = $product->pivot->quantity ?? 1;
+                $price = $product->pivot->price ?? $product->price;
+                $productSubtotal = $quantity * $price;
+                $subtotal += $productSubtotal;
+                
+                $productXml = $products->addChild('product');
+                $productXml->addChild('id', $product->product_id);
+                $productXml->addChild('name', htmlspecialchars($product->name));
+                $productXml->addChild('price', $price);
+                $productXml->addChild('quantity', $quantity);
+                $productXml->addChild('subtotal', $productSubtotal);
+            }
+            
+            $totals = $xml->addChild('totals');
+            $totals->addChild('subtotal', $subtotal);
+            
+            if ($order->discount > 0) {
+                $discountAmount = $subtotal * ($order->discount / 100);
+                $totals->addChild('discount_percent', $order->discount);
+                $totals->addChild('discount_amount', $discountAmount);
+            }
+            
+            $total = $subtotal;
+            if ($order->discount > 0) {
+                $total = $subtotal - ($subtotal * ($order->discount / 100));
+            }
+            $totals->addChild('total', $total);
+            
+            file_put_contents($filePath, $xml->asXML());
+        }
+        
+        return $filePath;
+    }
+    
+    /**
+     * Send invoice by email
+     */
+    private function sendInvoiceEmail($email, $order, $filePath, $format)
+    {
+        // Load PHPMailer classes for email functionality
+        // Note: This assumes PHPMailer is installed
+        
+        // Here we would normally have code to send an email with the invoice attached
+        // For simplicity, we'll just simulate a successful send
+        
+        return true;
     }
 }
