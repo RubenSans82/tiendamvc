@@ -16,7 +16,7 @@ class Order extends Model {
             'order_has_product', 
             'order_id', 
             'product_id'
-        )->withPivot('quantity', 'price');
+        )->withPivot('quantity', 'price')->withTimestamps();
     }
 
     public function getTotalAttribute() {
